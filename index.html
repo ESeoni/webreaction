@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Reaction</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0; /* Background color of the page */
+        margin: 0;
+        padding: 0;
+    }
+
+    #header {
+        text-align: center;
+        background-color: #ff7f00; /* Header background color (Orange) */
+        padding: 20px 0;
+        margin-bottom: 20px;
+        color: #fff; /* Header text color (White) */
+        font-size: 24px;
+    }
+
+    #arrow-container {
+        display: flex;
+        justify-content: center; /* Center aligns arrows horizontally */
+        align-items: center; /* Center aligns arrows vertically */
+        margin-top: 100px; /* Margin from the top of the page */
+    }
+
+    .arrow {
+        font-size: 90px; /* Font size of arrows */
+        color: #ff5252; /* Arrow color (Red) */
+        margin: 0 20px; /* Spacing between arrows */
+    }
+
+    button {
+        display: block;
+        margin: 20px auto; /* Center aligns the button */
+        background-color: #2196f3; /* Button background color (Blue) */
+        color: #fff; /* Button text color (White) */
+        border: none;
+        padding: 10px 20px;
+        font-size: 18px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    #instructions {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 18px;
+        color: #333; /* Instruction text color (Dark Gray) */
+    }
+
+    #result {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 18px;
+        color: #333; /* Result text color (Dark Gray) */
+    }
+
+    #restartButtonContainer {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+</style>
+</head>
+<body>
+<!-- Header -->
+<div id="header">Web Reaction</div>
+
+<!-- Instructions -->
+<div id="instructions">Instructions: Using your keyboard, hit the left or right arrow key corresponding to the arrow in the center of the screen as fast and accurately as possible. Focus only on the arrow in the middle of the screen and not on the other arrows around it.</div>
+
+<!-- Arrow container -->
+<div id="arrow-container">
+    <div class="arrow" id="arrow-left-1"></div>
+    <div class="arrow" id="arrow-left-2"></div>
+    <div class="arrow" id="central-arrow"></div>
+    <div class="arrow" id="arrow-right-1"></div>
+    <div class="arrow" id="arrow-right-2"></div>
+</div>
+
+<!-- Start button -->
+<button id="startButton">Start Test</button>
+
+<!-- Result display area -->
+<div id="result"></div>
+
+<!-- Restart button container -->
+<div id="restartButtonContainer"></div>
+
+<!-- JavaScript section -->
+<script>
+    // Variable declarations for managing the test
+    let testRunning = false;
+    let startTime, endTime, totalResponseTime = 0, correctCount = 0, testCount = 0, maxTestCount = 10;
+
+    // Function to start the test
+    function startTest() {
+        testCount = 0;
+        correctCount = 0;
+        testRunning = true;
+        document.getElementById('startButton').style.display = 'none';
+        document.getElementById('instructions').style.display = 'none';
+        document.getElementById('result').innerHTML = '';
+        document.getElementById('restartButtonContainer').innerHTML = '';
+
+        setTimeout(showArrow, 5000); // Minimum 5-second delay before the first test
+    }
+
+    // Function to generate a random delay
+    function getRandomDelay() {
+        return Math.random() * 4900 + 500; // Random delay between 0.5 and 5 seconds
+    }
+
+    // Function to display the arrows
+    function showArrow() {
+        if (testCount < maxTestCount) {
+            // Clear the arrows
+            clearArrows();
+
+            // Show new set of arrows
+            let direction = Math.random() < 0.5 ? '←' : '→';
+
+            // Generate distraction arrows
+            let leftDistraction1 = Math.random() < 0.5 ? '←' : '→';
+            let leftDistraction2 = Math.random() < 0.5 ? '←' : '→';
+            let rightDistraction1 = Math.random() < 0.5 ? '←' : '→';
+            let rightDistraction2 = Math.random() < 0.5 ? '←' : '→';
+
+            document.getElementById('arrow-left-1').innerHTML = leftDistraction1;
+            document.getElementById('arrow-left-2').innerHTML = leftDistraction2;
+            document.getElementById('central-arrow').innerHTML = direction;
+            document.getElementById('arrow-right-1').innerHTML = rightDistraction1;
+            document.getElementById('arrow-right-2').innerHTML = rightDistraction2;
+
+	    // Time starts when arrows are displayed for increased accuracy.
+	    startTime = new Date().getTime();
+
+            document.addEventListener('keydown', handleKeydown);
+        } else {
+            endTest();
+        }
+    }
+
+    // Function to handle keydown events
+    function handleKeydown(event) {
+        if (testRunning) {
+            endTime = new Date().getTime();
+            let responseTime = endTime - startTime;
+            totalResponseTime += responseTime;
+
+            let direction = document.getElementById('central-arrow').innerHTML;
+            if ((direction === '←' && event.key === 'ArrowLeft') || (direction === '→' && event.key === 'ArrowRight')) {
+                correctCount++;
+            }
+
+            testCount++;
+	    clearArrows();
+            setTimeout(showArrow, 500 + getRandomDelay());
+        }
+    }
+
+    // Function to end the test
+    function endTest() {
+        testRunning = false;
+        let accuracy = (correctCount / maxTestCount) * 100;
+        let averageResponseTime = totalResponseTime / maxTestCount;
+        let feedback = `You got ${correctCount} out of ${maxTestCount} correct with an average response time of ${averageResponseTime.toFixed(2)} milliseconds. Accuracy: ${accuracy.toFixed(2)}%`;
+        document.getElementById('result').innerHTML = feedback;
+
+        let restartButton = document.createElement('button');
+        restartButton.textContent = 'Restart Test';
+        restartButton.addEventListener('click', startTest);
+        document.getElementById('restartButtonContainer').appendChild(restartButton);
+        document.getElementById('restartButtonContainer').style.marginTop = '20px';
+    }
+
+    // Function to clear arrows
+    function clearArrows() {
+        document.getElementById('arrow-left-1').innerHTML = '';
+        document.getElementById('arrow-left-2').innerHTML = '';
+        document.getElementById('central-arrow').innerHTML = '';
+        document.getElementById('arrow-right-1').innerHTML = '';
+        document.getElementById('arrow-right-2').innerHTML = '';
+    }
+
+    // Event listener for start button click
+    document.getElementById('startButton').addEventListener('click', startTest);
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 - Page Not Found</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0; /* Background color of the page */
+        margin: 0;
+        padding: 0;
+    }
+
+    #header {
+        text-align: center;
+        background-color: #ff7f00; /* Header background color (Orange) */
+        padding: 20px 0;
+        margin-bottom: 20px;
+        color: #fff; /* Header text color (White) */
+        font-size: 24px;
+    }
+
+    #content {
+        text-align: center;
+        margin-top: 100px; /* Margin from the top of the page */
+    }
+
+    #error-code {
+        font-size: 36px;
+        color: #ff5252; /* Error code color (Red) */
+    }
+
+    #message {
+        font-size: 18px;
+        color: #333; /* Message text color (Dark Gray) */
+    }
+
+    button {
+        display: block;
+        margin: 20px auto; /* Center aligns the button */
+        background-color: #2196f3; /* Button background color (Blue) */
+        color: #fff; /* Button text color (White) */
+        border: none;
+        padding: 10px 20px;
+        font-size: 18px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+</style>
+</head>
+<body>
+<!-- Header -->
+<div id="header">404 - Page Not Found</div>
+
+<!-- Content -->
+<div id="content">
+    <div id="error-code">404</div>
+    <div id="message">Oops! The page you're looking for could not be found.</div>
+    <button onclick="goToHomepage()">Go to Homepage</button>
+</div>
+
+<!-- JavaScript section -->
+<script>
+    // Function to redirect to homepage
+    function goToHomepage() {
+        window.location.href = 'index.html'; // Modify the URL if needed
+    }
+</script>
+</body>
+</html>
